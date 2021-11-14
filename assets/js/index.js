@@ -2,12 +2,13 @@ const input = document.querySelector(".input")
 const booksContainer = document.querySelector(".books")
 const button = document.querySelector("button")
 
+
 const getBooks = () => {
     fetch(`https://www.googleapis.com/books/v1/volumes?q=${input.value}`)
         .then(res => res.json()).then(data => {
             let items = data.items
             console.log(items.length)
-            const documentFragment = document.createDocumentFragment()
+            const container = document.createElement('div')
             for (let i = 0; i < items.length; i++) {
                 const div = document.createElement("div");
                 console.log(items[i])
@@ -27,13 +28,17 @@ const getBooks = () => {
                         </a>            
                 `
                 div.classList.add("book")
-                documentFragment.appendChild(div)
-
+                container.appendChild(div)
+                container.classList.add("books-container")
             }
-            booksContainer.appendChild(documentFragment)
-
+            if (booksContainer.childNodes.length > 1) {
+                booksContainer.replaceChild(container, booksContainer.childNodes[1])
+            } else {
+                booksContainer.appendChild(container)
+            }
         })
 }
+
 button.addEventListener("click", () => {
     getBooks()
 })
